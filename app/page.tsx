@@ -12,13 +12,13 @@ export default function Home() {
       </header>
 
       <main className="mx-auto max-w-5xl px-6 py-12">
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2">
           {streamers.map((streamer) => (
             <article
               key={streamer.name}
-              className="rounded-xl border border-zinc-800 bg-zinc-900 p-6 transition-colors hover:border-zinc-700"
+              className="relative rounded-xl border border-zinc-800 bg-zinc-900 p-6 transition-colors hover:border-zinc-700"
             >
-              <div className="flex items-center gap-4">
+              <div className="flex items-start gap-4">
                 {streamer.avatarUrl && (
                   <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-full">
                     <Image
@@ -29,29 +29,31 @@ export default function Home() {
                     />
                   </div>
                 )}
-                <h2 className="text-xl font-semibold">{streamer.name}</h2>
+                <div className="flex-1 min-w-0">
+                  <h2 className="text-xl font-semibold">{streamer.name}</h2>
+
+                  {streamer.schedule && (
+                    <div className="mt-1 flex items-center gap-2 text-sm text-zinc-400">
+                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      {streamer.schedule}
+                    </div>
+                  )}
+                </div>
               </div>
 
               {streamer.bio && (
-                <p className="mt-4 text-sm text-zinc-400 line-clamp-3">
+                <p className="mt-4 text-sm text-zinc-400">
                   {streamer.bio}
                 </p>
-              )}
-
-              {streamer.schedule && (
-                <div className="mt-4 flex items-center gap-2 text-sm text-zinc-400">
-                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  {streamer.schedule}
-                </div>
               )}
 
               <a
                 href={streamer.channelUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-6 inline-flex items-center gap-2 rounded-full bg-violet-600 px-4 py-2 text-sm font-medium transition-colors hover:bg-violet-500"
+                className="absolute bottom-6 right-6 inline-flex items-center gap-2 rounded-full bg-violet-600 px-4 py-2 text-sm font-medium transition-colors hover:bg-violet-500"
               >
                 Watch
                 <svg
