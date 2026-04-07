@@ -174,15 +174,6 @@ export default function Home() {
                 <DiscordIcon className="h-4 w-4" />
                 Join Discord
               </a>
-              <a
-                href="https://github.com/packetloss404/vibecoders"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-sm text-zinc-400 transition-colors hover:text-teal-400"
-              >
-                <GithubIcon className="h-4 w-4" />
-                Submit a Streamer
-              </a>
             </div>
           </div>
         </div>
