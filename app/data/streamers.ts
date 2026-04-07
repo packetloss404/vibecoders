@@ -3,6 +3,7 @@ export interface Streamer {
   channelUrl: string;
   bio?: string;
   avatarUrl?: string;
+  schedule?: string;
 }
 
 export const streamers: Streamer[] = [
@@ -11,6 +12,7 @@ export const streamers: Streamer[] = [
     channelUrl: "https://youtube.com/@dyoburon",
     bio: "My background is software engineering (Ex-Microsoft, Salesforce, Expedia), and I recognized the power of LLMs to rapidly create products. I want to document my journey here with everyone, and hopefully create a community interested in building.",
     avatarUrl: "https://yt3.ggpht.com/TeGGg2s1Y_ljM3kcNNcChz42YVuJc4PofSKGxOLTJD9wBlIVOq4RTzmsB0v24dMdSYERdmg30w=s800-c-k-c0x00ffffff-no-rj",
+    schedule: "Most days, ~9AM ET",
   },
   {
     name: "Quad H",
@@ -23,12 +25,14 @@ export const streamers: Streamer[] = [
     channelUrl: "https://youtube.com/@BilbroSwagginzCoding",
     bio: "Bilbro's Vibe Coding",
     avatarUrl: "https://yt3.ggpht.com/j3Jyl1ZiQxC3HCnsWvF96Ao60quzdTYZQPjsYounVpz5kEyJKO6iYVja5ftpB0ZHkPdmu0iP8g=s800-c-k-c0x00ffffff-no-rj",
+    schedule: "Thu/Tue/Sun, ~8AM ET",
   },
   {
     name: "Clearmud",
     channelUrl: "https://youtube.com/@Clearmud",
     bio: "Simplifying AI for those who demand results, not hype. I'm Marcelo Oliveira, and I help businesses, entrepreneurs and creatives turn AI into a competitive advantage through data-driven insights and demonstrations.",
     avatarUrl: "https://yt3.ggpht.com/BLP7t_BjIAGu_Qk86WU6tYj2-5940aey-EqZmjqvySypdZ3rTYpFod2Foyzd7txlzYhNAXrdGw=s800-c-k-c0x00ffffff-no-rj",
+    schedule: "Thu/Sat/Tue, ~3AM ET",
   },
   {
     name: "khuur",
@@ -47,6 +51,7 @@ export const streamers: Streamer[] = [
     channelUrl: "https://youtube.com/@EnterpriseVibeCode",
     bio: "Senior DevOps Engineer live streaming how he's Vibe Coding Enterprise-Grade Open Source Applications.",
     avatarUrl: "https://yt3.ggpht.com/soNqUlI1xJ6QaP_hlgY3-TZEcgsD06PARrEbyON99GiKgReOtglbO_4gAYp40VJebwPhSq7baQ=s800-c-k-c0x00ffffff-no-rj",
+    schedule: "Wed/Sun, ~6PM ET",
   },
   {
     name: "Nate Needham",
