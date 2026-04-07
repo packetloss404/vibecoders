@@ -16,7 +16,7 @@ export default function Home() {
           {streamers.map((streamer) => (
             <article
               key={streamer.name}
-              className="relative rounded-xl border border-zinc-800 bg-zinc-900 p-6 transition-colors hover:border-zinc-700"
+              className="relative min-h-48 rounded-xl border border-zinc-800 bg-zinc-900 p-6 transition-colors hover:border-zinc-700"
             >
               <div className="flex items-start gap-4">
                 {streamer.avatarUrl && (
