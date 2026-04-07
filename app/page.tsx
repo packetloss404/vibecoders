@@ -73,6 +73,31 @@ export default function Home() {
             </article>
           ))}
         </div>
+
+        <div className="mt-12 flex flex-col items-center">
+          <p className="text-sm uppercase tracking-wider text-zinc-500">
+            Compiled and Promoted by:
+          </p>
+          <a
+            href="https://discord.gg/VnszZzaZ"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 flex flex-col items-center gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/50 px-8 py-6 transition-colors hover:border-violet-500/50 hover:bg-zinc-900"
+          >
+            <div className="relative h-16 w-16 overflow-hidden rounded-full">
+              <Image
+                src="https://cdn.discordapp.com/icons/1477335952035807444/6d2baf5d2c8d93ea64ed08b837e0ee34.png"
+                alt="Vibecoding Bunker"
+                fill
+                className="object-cover"
+              />
+            </div>
+            <div className="text-center">
+              <p className="text-lg font-semibold">Vibecoding Bunker</p>
+              <p className="mt-1 text-sm text-zinc-400">Join the community on Discord</p>
+            </div>
+          </a>
+        </div>
       </main>
     </div>
   );
