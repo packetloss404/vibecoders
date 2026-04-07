@@ -69,4 +69,11 @@ export const streamers: Streamer[] = [
     avatarUrl: "https://yt3.ggpht.com/uMgck3WF7S5xDeTG_8sXqM2w2svUmlWCnBXWIxxp0keRPZg90gB5_9Gj8gnew-xGU06jSb1yYg=s800-c-k-c0x00ffffff-no-rj",
     schedule: "Morning/afternoon streams",
   },
+  {
+    name: "André Mikalsen",
+    channelUrl: "https://youtube.com/@AndreMikalsen",
+    bio: "AI should produce actual results, not cool demos 🚀",
+    avatarUrl: "https://yt3.ggpht.com/n5m8r69YOXbXS2dM8p-ZHBwiAccMucah7x-U9QeJtEiZRxylFtZwwtSEwrAPhgPGCmFtgtK0zg=s800-c-k-c0x00ffffff-no-rj",
+    schedule: "Mon/Wed/Fri 09:00-14:00 CET",
+  },
 ];
