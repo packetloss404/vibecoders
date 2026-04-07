@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { streamers } from "./data/streamers";
 
 export default function Home() {
@@ -17,19 +18,24 @@ export default function Home() {
               key={streamer.name}
               className="rounded-xl border border-zinc-800 bg-zinc-900 p-6 transition-colors hover:border-zinc-700"
             >
-              <h2 className="text-xl font-semibold">{streamer.name}</h2>
+              <div className="flex items-center gap-4">
+                {streamer.avatarUrl && (
+                  <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-full">
+                    <Image
+                      src={streamer.avatarUrl}
+                      alt={streamer.name}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                )}
+                <h2 className="text-xl font-semibold">{streamer.name}</h2>
+              </div>
 
               {streamer.bio && (
-                <p className="mt-3 text-sm text-zinc-400">{streamer.bio}</p>
-              )}
-
-              {streamer.schedule && (
-                <div className="mt-4">
-                  <p className="text-xs uppercase tracking-wider text-zinc-500">
-                    Schedule
-                  </p>
-                  <p className="mt-1 text-sm text-zinc-300">{streamer.schedule}</p>
-                </div>
+                <p className="mt-4 text-sm text-zinc-400 line-clamp-3">
+                  {streamer.bio}
+                </p>
               )}
 
               <a
