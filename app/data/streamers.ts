@@ -30,4 +30,16 @@ export const streamers: Streamer[] = [
     name: "bridgemindai",
     channelUrl: "https://youtube.com/@bridgemindai",
   },
+  {
+    name: "EnterpriseVibeCode",
+    channelUrl: "https://youtube.com/@EnterpriseVibeCode",
+  },
+  {
+    name: "NateNeedham",
+    channelUrl: "https://youtube.com/@NateNeedham",
+  },
+  {
+    name: "Dubibubii",
+    channelUrl: "https://youtube.com/@Dubibubii",
+  },
 ];
