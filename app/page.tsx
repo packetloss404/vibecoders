@@ -4,14 +4,14 @@ import { streamers } from "./data/streamers";
 export default function Home() {
   return (
     <div className="min-h-screen bg-[#0f0f0f] text-zinc-50">
-      <header className="border-b border-zinc-800/50 bg-gradient-to-r from-[#0f0f0f] via-zinc-900 to-[#0f0f0f] px-6 py-12">
+      <header className="border-b border-zinc-800/50 bg-gradient-to-r from-[#0f0f0f] via-zinc-900 to-[#0f0f0f] px-6 py-6">
         <div className="mx-auto max-w-5xl text-center">
-          <h1 className="text-4xl font-bold tracking-tight">
+          <h1 className="text-3xl font-bold tracking-tight">
             <span className="bg-gradient-to-r from-teal-400 to-cyan-400 bg-clip-text text-transparent">
               Vibe Coders
             </span>
           </h1>
-          <p className="mt-3 text-lg text-zinc-400">
+          <p className="mt-2 text-base text-zinc-400">
             Streamers who code with good vibes
           </p>
         </div>
