@@ -3,11 +3,17 @@ import { streamers } from "./data/streamers";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-50">
-      <header className="border-b border-zinc-800 px-6 py-8">
-        <div className="mx-auto max-w-5xl">
-          <h1 className="text-3xl font-bold">Vibe Coders</h1>
-          <p className="mt-2 text-zinc-400">Streamers who code with good vibes</p>
+    <div className="min-h-screen bg-[#0f0f0f] text-zinc-50">
+      <header className="border-b border-zinc-800/50 bg-gradient-to-r from-[#0f0f0f] via-zinc-900 to-[#0f0f0f] px-6 py-12">
+        <div className="mx-auto max-w-5xl text-center">
+          <h1 className="text-4xl font-bold tracking-tight">
+            <span className="bg-gradient-to-r from-teal-400 to-cyan-400 bg-clip-text text-transparent">
+              Vibe Coders
+            </span>
+          </h1>
+          <p className="mt-3 text-lg text-zinc-400">
+            Streamers who code with good vibes
+          </p>
         </div>
       </header>
 
@@ -16,11 +22,11 @@ export default function Home() {
           {streamers.map((streamer) => (
             <article
               key={streamer.name}
-              className="relative min-h-56 rounded-xl border border-zinc-800 bg-zinc-900 p-6 pb-16 transition-colors hover:border-zinc-700"
+              className="group relative min-h-56 overflow-hidden rounded-2xl border border-zinc-800/50 bg-zinc-900/80 p-6 pb-16 backdrop-blur-sm transition-all hover:border-zinc-700/50 hover:bg-zinc-900"
             >
               <div className="flex items-start gap-4">
                 {streamer.avatarUrl && (
-                  <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-full">
+                  <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-full ring-2 ring-zinc-800 transition-all group-hover:ring-teal-500/50">
                     <Image
                       src={streamer.avatarUrl}
                       alt={streamer.name}
@@ -34,7 +40,7 @@ export default function Home() {
 
                   {streamer.schedule && (
                     <div className="mt-1 flex items-center gap-2 text-sm text-zinc-400">
-                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="h-4 w-4 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                       {streamer.schedule}
@@ -53,28 +59,18 @@ export default function Home() {
                 href={streamer.channelUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="absolute bottom-6 right-6 inline-flex items-center gap-2 rounded-full bg-violet-600 px-4 py-2 text-sm font-medium transition-colors hover:bg-violet-500"
+                className="absolute bottom-6 right-6 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-teal-500 to-cyan-500 px-5 py-2 text-sm font-medium text-black transition-all hover:from-teal-400 hover:to-cyan-400 hover:shadow-lg hover:shadow-teal-500/20"
               >
-                Watch
-                <svg
-                  className="h-4 w-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                  />
+                <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
                 </svg>
+                Watch
               </a>
             </article>
           ))}
         </div>
 
-        <div className="mt-12 flex flex-col items-center">
+        <div className="mt-16 flex flex-col items-center">
           <p className="text-sm uppercase tracking-wider text-zinc-500">
             Compiled and Promoted by:
           </p>
@@ -82,9 +78,9 @@ export default function Home() {
             href="https://discord.gg/VnszZzaZ"
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-4 flex flex-col items-center gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/50 px-8 py-6 transition-colors hover:border-violet-500/50 hover:bg-zinc-900"
+            className="mt-4 flex flex-col items-center gap-3 rounded-2xl border border-zinc-800/50 bg-zinc-900/80 px-8 py-6 backdrop-blur-sm transition-all hover:border-teal-500/30 hover:bg-zinc-900"
           >
-            <div className="relative h-16 w-16 overflow-hidden rounded-full">
+            <div className="relative h-16 w-16 overflow-hidden rounded-full ring-2 ring-zinc-800 transition-all hover:ring-teal-500/30">
               <Image
                 src="https://cdn.discordapp.com/icons/1477335952035807444/6d2baf5d2c8d93ea64ed08b837e0ee34.png"
                 alt="Vibecoding Bunker"
