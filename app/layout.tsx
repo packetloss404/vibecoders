@@ -15,6 +15,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Vibe Coders",
   description: "Streamers who code with good vibes",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({

@@ -4,6 +4,11 @@ export interface Streamer {
   bio?: string;
   avatarUrl?: string;
   schedule?: string;
+  socials?: {
+    twitter?: string;
+    discord?: string;
+    github?: string;
+  };
 }
 
 export const streamers: Streamer[] = [
@@ -75,5 +80,10 @@ export const streamers: Streamer[] = [
     bio: "AI should produce actual results, not cool demos 🚀",
     avatarUrl: "https://yt3.ggpht.com/n5m8r69YOXbXS2dM8p-ZHBwiAccMucah7x-U9QeJtEiZRxylFtZwwtSEwrAPhgPGCmFtgtK0zg=s800-c-k-c0x00ffffff-no-rj",
     schedule: "Mon/Wed/Fri 09:00-14:00 CET",
+    socials: {
+      twitter: "https://x.com/andremikalsen_",
+      discord: "https://discord.gg/QhRnz9m5HE",
+      github: "https://github.com/AndyMik90",
+    },
   },
 ];
