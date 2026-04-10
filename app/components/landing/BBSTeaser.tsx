@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 
 const terminalLines = [
-  "> connect vibebbs.io",
+  "> connect bbs.packetloss404.com",
   "Connected to VibeBBS v3.2.1",
   "",
   "Welcome to the grid, vibe coder.",
@@ -109,7 +109,7 @@ export function BBSTeaser() {
                 <div className="h-3 w-3 rounded-full bg-green-500/80" />
               </div>
               <span className="ml-2 text-xs text-zinc-500 font-mono">
-                vibebbs.io
+                bbs.packetloss404.com
               </span>
             </div>
             {/* Terminal body */}
@@ -119,11 +119,13 @@ export function BBSTeaser() {
           </div>
           <div className="mt-3 flex items-center gap-2">
             <span className="font-mono text-xs text-zinc-500">
-              telnet://vibebbs.io
+              telnet telnet.packetloss404.com
             </span>
             <button
               onClick={() =>
-                navigator.clipboard?.writeText("telnet://vibebbs.io")
+                navigator.clipboard?.writeText(
+                  "telnet telnet.packetloss404.com"
+                )
               }
               className="text-xs text-zinc-600 transition-colors hover:text-teal-400"
             >
