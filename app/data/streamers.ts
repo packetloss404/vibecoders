@@ -27,6 +27,24 @@ export const streamers: Streamer[] = [
     schedule: "Check channel for latest streams",
   },
   {
+    name: "Enterprise Vibe Code",
+    channelUrl: "https://youtube.com/@EnterpriseVibeCode",
+    bio: "Senior DevOps Engineer live streaming how he's Vibe Coding Enterprise-Grade Open Source Applications.",
+    avatarUrl: "https://yt3.ggpht.com/soNqUlI1xJ6QaP_hlgY3-TZEcgsD06PARrEbyON99GiKgReOtglbO_4gAYp40VJebwPhSq7baQ=s800-c-k-c0x00ffffff-no-rj",
+    schedule: "Late night streams",
+  },
+  {
+    name: "Jordan Lee",
+    channelUrl: "https://youtube.com/@jorddanlee",
+  },
+  {
+    name: "BridgeMind",
+    channelUrl: "https://youtube.com/@bridgemindai",
+    bio: "Matthew Miller is the Founder & CEO of BridgeMind — his third startup.",
+    avatarUrl: "https://yt3.ggpht.com/Nhub0TMCZUFjPrr7PZDvKuv6O2zICq7Yfi5Ah6P0OdTq_iaoZJ0zM8uMB4pKuEmc7XWpbrxa=s800-c-k-c0x00ffffff-no-rj",
+    schedule: "Afternoon/evening streams",
+  },
+  {
     name: "Bilbro's Vibe Coding",
     channelUrl: "https://youtube.com/@BilbroSwagginzCoding",
     bio: "Bilbro's Vibe Coding",
@@ -45,20 +63,6 @@ export const streamers: Streamer[] = [
     bio: "Welcome to the chill spot for coders & curious minds! We vibe code, explore the latest AI tools, drop AI & tech news, and learn new things together — no pressure, just good energy. Whether you're a beginner or a seasoned dev, pull up a chair and code with us.",
     avatarUrl: "https://yt3.ggpht.com/U1uoa8pCJn_4Xs7QHPED_TQbCe1B_rwGsyfXNX0JOZKFzGwzrqTvR-nHT_Q5o26L08x0okwF-w=s800-c-k-c0x00ffffff-no-rj",
     schedule: "Check channel for latest streams",
-  },
-  {
-    name: "BridgeMind",
-    channelUrl: "https://youtube.com/@bridgemindai",
-    bio: "Matthew Miller is the Founder & CEO of BridgeMind — his third startup.",
-    avatarUrl: "https://yt3.ggpht.com/Nhub0TMCZUFjPrr7PZDvKuv6O2zICq7Yfi5Ah6P0OdTq_iaoZJ0zM8uMB4pKuEmc7XWpbrxa=s800-c-k-c0x00ffffff-no-rj",
-    schedule: "Afternoon/evening streams",
-  },
-  {
-    name: "Enterprise Vibe Code",
-    channelUrl: "https://youtube.com/@EnterpriseVibeCode",
-    bio: "Senior DevOps Engineer live streaming how he's Vibe Coding Enterprise-Grade Open Source Applications.",
-    avatarUrl: "https://yt3.ggpht.com/soNqUlI1xJ6QaP_hlgY3-TZEcgsD06PARrEbyON99GiKgReOtglbO_4gAYp40VJebwPhSq7baQ=s800-c-k-c0x00ffffff-no-rj",
-    schedule: "Late night streams",
   },
   {
     name: "Nate Needham",
