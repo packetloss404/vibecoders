@@ -15,7 +15,8 @@ const channels = {
   'bridgemindai': 'UCwaTGE53GLGC3fDClVl_7TA',
   'EnterpriseVibeCode': 'UCyxYcJWs5WstpM2h8KjabUw',
   'NateNeedham': 'UChh5UFM7CUMFNVQrJX1aVVA',
-  'Dubibubii': 'UC4SgqYQmdTCKXUoer2U-lcg'
+  'Dubibubii': 'UC4SgqYQmdTCKXUoer2U-lcg',
+  'jorddanlee': 'UCMB_2UGhVxA_gLjdtm35lRw'
 };
 
 async function getChannelData(channelId) {

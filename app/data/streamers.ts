@@ -36,6 +36,9 @@ export const streamers: Streamer[] = [
   {
     name: "Jordan Lee",
     channelUrl: "https://youtube.com/@jorddanlee",
+    bio: "Founder from Canada, building AI-powered tools for businesses and helping owners and entrepreneurs monetize with AI. Documenting the entire process live — every win, every mistake, and everything learned along the way.",
+    avatarUrl: "https://yt3.ggpht.com/TbyAjuYqNQXKFFbMTe7pOZvwQapBnzxL30qrhFtLyCI8SFX4YFmnGS5RU6WhYE5Rn4lAp7xSvmA=s800-c-k-c0x00ffffff-no-rj",
+    schedule: "Frequent streamer, mornings ~9-10 AM ET",
   },
   {
     name: "BridgeMind",
