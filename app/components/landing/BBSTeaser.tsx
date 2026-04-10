@@ -5,17 +5,14 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 
 const terminalLines = [
-  "> connect bbs.packetloss404.com",
-  "Connected to VibeBBS v3.2.1",
+  "> telnet bbs.packetloss404.com",
+  "Connecting...",
+  "Connected to VibeBBS.",
   "",
-  "Welcome to the grid, vibe coder.",
+  "Welcome, vibe coder.",
+  "Type HELP for commands.",
   "",
-  "[1] General Discussion",
-  "[2] Project Showcase",
-  "[3] AI & Tools",
-  "[4] Off Topic",
-  "",
-  "Select board: _",
+  "> _",
 ];
 
 function TerminalTyping() {
@@ -140,16 +137,16 @@ export function BBSTeaser() {
             VibeBBS
           </p>
           <h2 className="text-3xl font-bold text-zinc-100 sm:text-4xl">
-            Jack Into the Grid
+            Connect to the Terminal
           </h2>
           <p className="mt-4 text-zinc-400 leading-relaxed">
-            Threaded discussions, retro aesthetics, modern accessibility. Browse
-            boards, read threads, and post messages right from your browser — or
-            connect via telnet for the full experience.
+            A live BBS terminal running right in your browser — CRT scanlines
+            and all. Drop in from the web or connect via telnet for the
+            classic experience.
           </p>
           <p className="mt-3 text-zinc-500 text-sm">
-            BBS activity feeds back into The Signal Board, surfacing trending
-            threads to the wider community.
+            Old-school community, modern accessibility. No account needed to
+            lurk.
           </p>
           <Link
             href="/bbs"

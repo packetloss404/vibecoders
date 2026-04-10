@@ -19,11 +19,11 @@ export default function BBSPage() {
             VibeBBS
           </p>
           <h1 className="text-3xl font-bold text-zinc-100 sm:text-4xl">
-            Jack Into the Grid
+            Connect to the Terminal
           </h1>
           <p className="mt-3 text-zinc-400">
-            Browse boards, read threads, and explore the BBS right from your
-            browser — or connect via telnet for the full experience.
+            A live terminal session straight to the BBS. Drop in from your
+            browser or fire up a telnet client for the classic experience.
           </p>
         </motion.div>
 
