@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import { streamers } from "./data/streamers";
 
 function TwitterIcon({ className }: { className?: string }) {
@@ -25,7 +28,46 @@ function DiscordIcon({ className }: { className?: string }) {
   );
 }
 
+function LiveBadge() {
+  return (
+    <span className="inline-flex items-center gap-1.5 rounded-full bg-red-500/15 border border-red-500/30 px-2.5 py-0.5 text-xs font-bold text-red-400 uppercase tracking-wide">
+      <span className="relative flex h-2 w-2">
+        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75" />
+        <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500" />
+      </span>
+      Live
+    </span>
+  );
+}
+
 export default function Home() {
+  const [liveStatus, setLiveStatus] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    async function fetchLiveStatus() {
+      try {
+        const res = await fetch("/api/live-status");
+        if (res.ok) {
+          const data = await res.json();
+          setLiveStatus(data);
+        }
+      } catch {
+        // Silently fail — live badges just won't show
+      }
+    }
+
+    fetchLiveStatus();
+    const interval = setInterval(fetchLiveStatus, 3 * 60 * 1000); // Poll every 3 minutes
+    return () => clearInterval(interval);
+  }, []);
+
+  // Sort: live streamers first
+  const sortedStreamers = [...streamers].sort((a, b) => {
+    const aLive = liveStatus[a.channelId] ? 1 : 0;
+    const bLive = liveStatus[b.channelId] ? 1 : 0;
+    return bLive - aLive;
+  });
+
   return (
     <div className="min-h-screen bg-[#0f0f0f] text-zinc-50">
       <header className="border-b border-zinc-800/50 bg-gradient-to-r from-[#0f0f0f] via-zinc-900 to-[#0f0f0f] px-6 py-6">
@@ -43,91 +85,121 @@ export default function Home() {
 
       <main className="mx-auto max-w-5xl px-6 py-12">
         <div className="grid gap-6 sm:grid-cols-2">
-          {streamers.map((streamer) => (
-            <article
-              key={streamer.name}
-              className="group relative min-h-56 overflow-hidden rounded-2xl border border-zinc-800/50 bg-zinc-900/80 p-6 pb-16 backdrop-blur-sm transition-all hover:border-zinc-700/50 hover:bg-zinc-900"
-            >
-              <div className="flex items-start gap-4">
-                {streamer.avatarUrl && (
-                  <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-full ring-2 ring-zinc-800 transition-all group-hover:ring-teal-500/50">
-                    <Image
-                      src={streamer.avatarUrl}
-                      alt={streamer.name}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                )}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-semibold">{streamer.name}</h2>
-                    {streamer.socials && (
+          {sortedStreamers.map((streamer) => {
+            const isLive = liveStatus[streamer.channelId];
+            return (
+              <article
+                key={streamer.name}
+                className={`group relative min-h-56 overflow-hidden rounded-2xl border p-6 pb-16 backdrop-blur-sm transition-all ${
+                  isLive
+                    ? "border-red-500/30 bg-zinc-900/80 hover:border-red-500/50 hover:bg-zinc-900"
+                    : "border-zinc-800/50 bg-zinc-900/80 hover:border-zinc-700/50 hover:bg-zinc-900"
+                }`}
+              >
+                <div className="flex items-start gap-4">
+                  {streamer.avatarUrl && (
+                    <div className={`relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-full ring-2 transition-all ${
+                      isLive
+                        ? "ring-red-500/50 group-hover:ring-red-500/70"
+                        : "ring-zinc-800 group-hover:ring-teal-500/50"
+                    }`}>
+                      <Image
+                        src={streamer.avatarUrl}
+                        alt={streamer.name}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        {streamer.socials.twitter && (
-                          <a
-                            href={streamer.socials.twitter}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-zinc-500 transition-colors hover:text-teal-400"
-                          >
-                            <TwitterIcon className="h-4 w-4" />
-                          </a>
-                        )}
-                        {streamer.socials.github && (
-                          <a
-                            href={streamer.socials.github}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-zinc-500 transition-colors hover:text-teal-400"
-                          >
-                            <GithubIcon className="h-4 w-4" />
-                          </a>
-                        )}
-                        {streamer.socials.discord && (
-                          <a
-                            href={streamer.socials.discord}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-zinc-500 transition-colors hover:text-teal-400"
-                          >
-                            <DiscordIcon className="h-4 w-4" />
-                          </a>
-                        )}
+                        <h2 className="text-xl font-semibold">{streamer.name}</h2>
+                        {isLive && <LiveBadge />}
+                      </div>
+                      {streamer.socials && (
+                        <div className="flex items-center gap-2">
+                          {streamer.socials.twitter && (
+                            <a
+                              href={streamer.socials.twitter}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-zinc-500 transition-colors hover:text-teal-400"
+                            >
+                              <TwitterIcon className="h-4 w-4" />
+                            </a>
+                          )}
+                          {streamer.socials.github && (
+                            <a
+                              href={streamer.socials.github}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-zinc-500 transition-colors hover:text-teal-400"
+                            >
+                              <GithubIcon className="h-4 w-4" />
+                            </a>
+                          )}
+                          {streamer.socials.discord && (
+                            <a
+                              href={streamer.socials.discord}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-zinc-500 transition-colors hover:text-teal-400"
+                            >
+                              <DiscordIcon className="h-4 w-4" />
+                            </a>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    {streamer.schedule && (
+                      <div className="mt-1 flex items-center gap-2 text-sm text-zinc-400">
+                        <svg className="h-4 w-4 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        {streamer.schedule}
                       </div>
                     )}
                   </div>
-
-                  {streamer.schedule && (
-                    <div className="mt-1 flex items-center gap-2 text-sm text-zinc-400">
-                      <svg className="h-4 w-4 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      {streamer.schedule}
-                    </div>
-                  )}
                 </div>
-              </div>
 
-              {streamer.bio && (
-                <p className="mt-4 mb-6 text-sm text-zinc-400 line-clamp-4">
-                  {streamer.bio}
-                </p>
-              )}
+                {streamer.bio && (
+                  <p className="mt-4 mb-6 text-sm text-zinc-400 line-clamp-4">
+                    {streamer.bio}
+                  </p>
+                )}
 
-              <a
-                href={streamer.channelUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="absolute bottom-6 right-6 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-teal-500 to-cyan-500 px-5 py-2 text-sm font-medium text-black transition-all hover:from-teal-400 hover:to-cyan-400 hover:shadow-lg hover:shadow-teal-500/20"
-              >
-                <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                </svg>
-                Watch
-              </a>
-            </article>
-          ))}
+                <a
+                  href={streamer.channelUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`absolute bottom-6 right-6 inline-flex items-center gap-2 rounded-full px-5 py-2 text-sm font-medium transition-all ${
+                    isLive
+                      ? "bg-red-500 text-white hover:bg-red-400 hover:shadow-lg hover:shadow-red-500/20"
+                      : "bg-gradient-to-r from-teal-500 to-cyan-500 text-black hover:from-teal-400 hover:to-cyan-400 hover:shadow-lg hover:shadow-teal-500/20"
+                  }`}
+                >
+                  {isLive ? (
+                    <>
+                      <span className="relative flex h-2 w-2">
+                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-75" />
+                        <span className="relative inline-flex h-2 w-2 rounded-full bg-white" />
+                      </span>
+                      Watch Live
+                    </>
+                  ) : (
+                    <>
+                      <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                      </svg>
+                      Watch
+                    </>
+                  )}
+                </a>
+              </article>
+            );
+          })}
         </div>
 
         <div className="mt-16 flex flex-col items-center">
