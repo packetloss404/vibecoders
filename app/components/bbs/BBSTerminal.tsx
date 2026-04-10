@@ -276,24 +276,27 @@ export function BBSTerminal() {
         ref={terminalRef}
         className="flex-1 overflow-y-auto p-4 font-mono text-sm leading-relaxed min-h-[400px] max-h-[600px]"
       >
-        {lines.map((line, i) => (
-          <div
-            key={i}
-            className={
-              line.startsWith(">")
-                ? "text-teal-400"
-                : line.includes("[NEW]")
-                  ? "text-emerald-300"
-                  : line.includes("[HOT]")
-                    ? "text-amber-300"
-                    : line.includes("═") || line.includes("║") || line.includes("╔") || line.includes("╚") || line.includes("╠") || line.includes("╗") || line.includes("╝") || line.includes("╣") || line.includes("━")
-                      ? "text-teal-400/70"
-                      : "text-zinc-300"
-            }
-          >
-            {line || "\u00A0"}
-          </div>
-        ))}
+        {lines.map((line, i) => {
+          const text = line ?? "";
+          return (
+            <div
+              key={i}
+              className={
+                text.startsWith(">")
+                  ? "text-teal-400"
+                  : text.includes("[NEW]")
+                    ? "text-emerald-300"
+                    : text.includes("[HOT]")
+                      ? "text-amber-300"
+                      : text.includes("═") || text.includes("║") || text.includes("╔") || text.includes("╚") || text.includes("╠") || text.includes("╗") || text.includes("╝") || text.includes("╣") || text.includes("━")
+                        ? "text-teal-400/70"
+                        : "text-zinc-300"
+              }
+            >
+              {text || "\u00A0"}
+            </div>
+          );
+        })}
 
         {/* Input line */}
         {ready && (
