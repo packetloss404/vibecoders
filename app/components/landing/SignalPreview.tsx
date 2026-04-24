@@ -1,18 +1,11 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import type { Streamer } from "../../data/streamers";
+import type { SignalEvent, SignalEventType } from "../../lib/signalEvents";
 
-interface SignalEvent {
-  id: string;
-  type: "went_live" | "went_offline" | "new_streamer";
-  streamerName: string;
-  title: string;
-  timeAgo: string;
-}
-
-function getEventIcon(type: SignalEvent["type"]) {
+function getEventIcon(type: SignalEventType) {
   switch (type) {
     case "went_live":
       return (
@@ -35,7 +28,7 @@ function getEventIcon(type: SignalEvent["type"]) {
   }
 }
 
-function getBorderColor(type: SignalEvent["type"]) {
+function getBorderColor(type: SignalEventType) {
   switch (type) {
     case "went_live":
       return "border-l-red-500/50";
@@ -46,51 +39,125 @@ function getBorderColor(type: SignalEvent["type"]) {
   }
 }
 
-function generateSignalEvents(
-  streamers: Streamer[],
-  liveStatus: Record<string, boolean>
-): SignalEvent[] {
-  const events: SignalEvent[] = [];
-
-  // Generate live events from actual live status
-  for (const s of streamers) {
-    if (liveStatus[s.channelId]) {
-      events.push({
-        id: `live-${s.channelId}`,
-        type: "went_live",
-        streamerName: s.name,
-        title: `${s.name} just went live`,
-        timeAgo: "Just now",
-      });
-    }
+function getEventTitle(event: SignalEvent): string {
+  switch (event.type) {
+    case "went_live":
+      return `${event.streamerName} just went live`;
+    case "went_offline":
+      return `${event.streamerName} ended their stream`;
+    case "new_streamer":
+      return `${event.streamerName} joined the directory`;
   }
-
-  // Add some placeholder recent activity
-  const recentStreamers = streamers.slice(0, 5);
-  const timeAgos = ["2h ago", "4h ago", "6h ago", "12h ago", "1d ago"];
-  for (let i = 0; i < recentStreamers.length; i++) {
-    if (!liveStatus[recentStreamers[i].channelId]) {
-      events.push({
-        id: `offline-${recentStreamers[i].channelId}`,
-        type: "went_offline",
-        streamerName: recentStreamers[i].name,
-        title: `${recentStreamers[i].name} ended stream`,
-        timeAgo: timeAgos[i],
-      });
-    }
-  }
-
-  return events.slice(0, 6);
 }
 
-export function SignalPreview({
-  streamers,
-  liveStatus,
-}: {
-  streamers: Streamer[];
-  liveStatus: Record<string, boolean>;
-}) {
-  const events = generateSignalEvents(streamers, liveStatus);
+function timeAgo(iso: string): string {
+  const then = new Date(iso).getTime();
+  if (Number.isNaN(then)) return "";
+  const seconds = Math.floor((Date.now() - then) / 1000);
+  if (seconds < 60) return "Just now";
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  return `${days}d ago`;
+}
+
+function SkeletonRow({ index }: { index: number }) {
+  return (
+    <div
+      className="flex items-center gap-3 rounded-xl border-l-2 border-l-zinc-700/30 bg-zinc-800/30 px-4 py-3 animate-pulse"
+      style={{ animationDelay: `${index * 120}ms` }}
+    >
+      <div className="h-8 w-8 flex-shrink-0 rounded-full bg-zinc-800/70" />
+      <div className="flex-1 space-y-2">
+        <div className="h-3 w-2/3 rounded bg-zinc-800/70" />
+      </div>
+      <div className="h-3 w-12 rounded bg-zinc-800/50" />
+    </div>
+  );
+}
+
+export function SignalPreview() {
+  const [events, setEvents] = useState<SignalEvent[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [errored, setErrored] = useState<boolean>(false);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function fetchEvents() {
+      try {
+        const res = await fetch("/api/signal-events");
+        if (!res.ok) {
+          throw new Error(`Signal preview request failed: ${res.status}`);
+        }
+        const data = (await res.json()) as { events?: SignalEvent[] };
+        if (!cancelled) {
+          setEvents(Array.isArray(data.events) ? data.events.slice(0, 5) : []);
+        }
+      } catch (err) {
+        console.error("SignalPreview fetch failed", err);
+        if (!cancelled) {
+          setErrored(true);
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+
+    fetchEvents();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  function renderBody() {
+    if (loading) {
+      return (
+        <div className="space-y-1">
+          {[0, 1, 2].map((i) => (
+            <SkeletonRow key={i} index={i} />
+          ))}
+        </div>
+      );
+    }
+
+    if (errored || events.length === 0) {
+      return (
+        <p className="text-center text-sm text-zinc-500 py-8">
+          Signal board is quiet.
+        </p>
+      );
+    }
+
+    return (
+      <div className="space-y-1">
+        {events.map((event, i) => (
+          <motion.div
+            key={event.id}
+            className={`flex items-center gap-3 rounded-xl border-l-2 ${getBorderColor(event.type)} bg-zinc-800/30 px-4 py-3`}
+            initial={{ opacity: 0, x: -10 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: i * 0.08, duration: 0.3 }}
+          >
+            {getEventIcon(event.type)}
+            <div className="flex-1 min-w-0">
+              <p className="text-sm text-zinc-300 truncate">
+                {getEventTitle(event)}
+              </p>
+            </div>
+            <span className="text-xs text-zinc-500 whitespace-nowrap">
+              {timeAgo(event.timestamp)}
+            </span>
+          </motion.div>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <motion.section
@@ -125,26 +192,7 @@ export function SignalPreview({
         </div>
 
         <div className="rounded-2xl border border-zinc-800/50 bg-zinc-900/60 p-4 backdrop-blur-sm">
-          <div className="space-y-1">
-            {events.map((event, i) => (
-              <motion.div
-                key={event.id}
-                className={`flex items-center gap-3 rounded-xl border-l-2 ${getBorderColor(event.type)} bg-zinc-800/30 px-4 py-3`}
-                initial={{ opacity: 0, x: -10 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.08, duration: 0.3 }}
-              >
-                {getEventIcon(event.type)}
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm text-zinc-300 truncate">{event.title}</p>
-                </div>
-                <span className="text-xs text-zinc-500 whitespace-nowrap">
-                  {event.timeAgo}
-                </span>
-              </motion.div>
-            ))}
-          </div>
+          {renderBody()}
         </div>
       </div>
     </motion.section>

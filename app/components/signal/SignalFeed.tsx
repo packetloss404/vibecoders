@@ -2,22 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { streamers, type Streamer } from "../../data/streamers";
-
-type EventType = "went_live" | "went_offline" | "new_streamer" | "bbs_trending";
-
-interface SignalEvent {
-  id: string;
-  type: EventType;
-  streamerName: string;
-  title: string;
-  timestamp: Date;
-  emoji?: string;
-}
+import type { SignalEvent, SignalEventType } from "../../lib/signalEvents";
+import { useReactions } from "../../lib/useReactions";
 
 type FilterType = "all" | "live" | "community";
 
-function getEventIcon(type: EventType) {
+function getEventIcon(type: SignalEventType) {
   switch (type) {
     case "went_live":
       return <span className="text-base">🔴</span>;
@@ -25,12 +15,10 @@ function getEventIcon(type: EventType) {
       return <span className="text-base">⚫</span>;
     case "new_streamer":
       return <span className="text-base">🆕</span>;
-    case "bbs_trending":
-      return <span className="text-base">💬</span>;
   }
 }
 
-function getBorderColor(type: EventType) {
+function getBorderColor(type: SignalEventType) {
   switch (type) {
     case "went_live":
       return "border-l-red-500/50";
@@ -38,13 +26,24 @@ function getBorderColor(type: EventType) {
       return "border-l-zinc-500/30";
     case "new_streamer":
       return "border-l-teal-500/50";
-    case "bbs_trending":
-      return "border-l-cyan-500/50";
   }
 }
 
-function timeAgo(date: Date): string {
-  const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
+function getEventTitle(event: SignalEvent): string {
+  switch (event.type) {
+    case "went_live":
+      return `${event.streamerName} just went live on YouTube`;
+    case "went_offline":
+      return `${event.streamerName} ended their stream`;
+    case "new_streamer":
+      return `${event.streamerName} joined the directory`;
+  }
+}
+
+function timeAgo(isoTimestamp: string, _tick: number): string {
+  const then = new Date(isoTimestamp).getTime();
+  if (Number.isNaN(then)) return "";
+  const seconds = Math.floor((Date.now() - then) / 1000);
   if (seconds < 60) return "Just now";
   const minutes = Math.floor(seconds / 60);
   if (minutes < 60) return `${minutes}m ago`;
@@ -57,14 +56,7 @@ function timeAgo(date: Date): string {
 const REACTION_EMOJIS = ["🔥", "💜", "🚀", "👀", "🎉", "💀"];
 
 function ReactionBar({ eventId }: { eventId: string }) {
-  const [reactions, setReactions] = useState<Record<string, number>>({});
-
-  function handleReact(emoji: string) {
-    setReactions((prev) => ({
-      ...prev,
-      [emoji]: (prev[emoji] || 0) + 1,
-    }));
-  }
+  const { reactions, react } = useReactions(eventId);
 
   return (
     <div className="flex items-center gap-1 mt-2">
@@ -73,7 +65,7 @@ function ReactionBar({ eventId }: { eventId: string }) {
         return (
           <button
             key={`${eventId}-${emoji}`}
-            onClick={() => handleReact(emoji)}
+            onClick={() => react(emoji)}
             className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs transition-all hover:scale-105 active:scale-95 ${
               count > 0
                 ? "bg-teal-500/15 border border-teal-500/25 text-zinc-300"
@@ -89,97 +81,75 @@ function ReactionBar({ eventId }: { eventId: string }) {
   );
 }
 
-function generateEvents(
-  allStreamers: Streamer[],
-  liveStatus: Record<string, boolean>
-): SignalEvent[] {
-  const events: SignalEvent[] = [];
-  const now = Date.now();
-
-  // Live events from real status
-  for (const s of allStreamers) {
-    if (liveStatus[s.channelId]) {
-      events.push({
-        id: `live-${s.channelId}`,
-        type: "went_live",
-        streamerName: s.name,
-        title: `${s.name} just went live on YouTube`,
-        timestamp: new Date(now - Math.random() * 600000), // within last 10 min
-      });
-    }
-  }
-
-  // Simulate recent activity for demo
-  const offlineStreamers = allStreamers.filter((s) => !liveStatus[s.channelId]);
-  const timeOffsets = [
-    1800000, 3600000, 7200000, 14400000, 21600000, 43200000, 86400000,
-    129600000, 172800000, 259200000,
-  ];
-
-  for (let i = 0; i < Math.min(offlineStreamers.length, 8); i++) {
-    events.push({
-      id: `offline-${offlineStreamers[i].channelId}`,
-      type: "went_offline",
-      streamerName: offlineStreamers[i].name,
-      title: `${offlineStreamers[i].name} ended their stream`,
-      timestamp: new Date(now - timeOffsets[i]),
-    });
-  }
-
-  // BBS trending
-  events.push({
-    id: "bbs-1",
-    type: "bbs_trending",
-    streamerName: "",
-    title: "Trending on BBS: Best AI coding tools of 2026",
-    timestamp: new Date(now - 5400000),
-  });
-  events.push({
-    id: "bbs-2",
-    type: "bbs_trending",
-    streamerName: "",
-    title: "Trending on BBS: Show your latest vibe coded project",
-    timestamp: new Date(now - 28800000),
-  });
-
-  // New streamer event
-  events.push({
-    id: "new-jordan",
-    type: "new_streamer",
-    streamerName: "Jordan Lee",
-    title: "Jordan Lee joined the directory",
-    timestamp: new Date(now - 172800000),
-  });
-
-  return events.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+function SkeletonRow({ index }: { index: number }) {
+  return (
+    <div
+      className="border-l-2 border-l-zinc-700/30 rounded-xl bg-zinc-800/30 px-5 py-4 animate-pulse"
+      style={{ animationDelay: `${index * 120}ms` }}
+    >
+      <div className="flex items-start gap-3">
+        <div className="h-8 w-8 flex-shrink-0 rounded-full bg-zinc-800/70" />
+        <div className="flex-1 space-y-2">
+          <div className="h-3 w-2/3 rounded bg-zinc-800/70" />
+          <div className="h-2 w-20 rounded bg-zinc-800/50" />
+          <div className="h-5 w-40 rounded-full bg-zinc-800/40 mt-2" />
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export function SignalFeed() {
-  const [liveStatus, setLiveStatus] = useState<Record<string, boolean>>({});
+  const [events, setEvents] = useState<SignalEvent[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const [filter, setFilter] = useState<FilterType>("all");
+  const [tick, setTick] = useState<number>(0);
 
+  // Poll /api/signal-events every 60s
   useEffect(() => {
-    async function fetchLiveStatus() {
+    let cancelled = false;
+
+    async function fetchEvents() {
       try {
-        const res = await fetch("/api/live-status");
-        if (res.ok) {
-          setLiveStatus(await res.json());
+        const res = await fetch("/api/signal-events");
+        if (!res.ok) {
+          throw new Error(`Signal feed request failed: ${res.status}`);
         }
-      } catch {
-        // silently fail
+        const data = (await res.json()) as { events?: SignalEvent[] };
+        if (!cancelled) {
+          setEvents(Array.isArray(data.events) ? data.events : []);
+        }
+      } catch (err) {
+        // Handle silently but log; do not crash the feed.
+        console.error("SignalFeed fetch failed", err);
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
     }
-    fetchLiveStatus();
-    const interval = setInterval(fetchLiveStatus, 3 * 60 * 1000);
+
+    fetchEvents();
+    const interval = setInterval(fetchEvents, 60 * 1000);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
+  }, []);
+
+  // Re-render time labels every 30s without refetching
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTick((t) => t + 1);
+    }, 30 * 1000);
     return () => clearInterval(interval);
   }, []);
 
-  const events = generateEvents(streamers, liveStatus);
-
   const filtered = events.filter((e) => {
     if (filter === "all") return true;
-    if (filter === "live") return e.type === "went_live" || e.type === "went_offline";
-    if (filter === "community") return e.type === "bbs_trending" || e.type === "new_streamer";
+    if (filter === "live")
+      return e.type === "went_live" || e.type === "went_offline";
+    if (filter === "community") return e.type === "new_streamer";
     return true;
   });
 
@@ -188,6 +158,73 @@ export function SignalFeed() {
     { label: "Live", value: "live" },
     { label: "Community", value: "community" },
   ];
+
+  function renderBody() {
+    if (loading) {
+      return (
+        <div className="space-y-2">
+          {[0, 1, 2, 3].map((i) => (
+            <SkeletonRow key={i} index={i} />
+          ))}
+        </div>
+      );
+    }
+
+    if (events.length === 0) {
+      return (
+        <p className="text-center text-sm text-zinc-500 py-12">
+          No signals yet — the grid is quiet.
+        </p>
+      );
+    }
+
+    if (filtered.length === 0) {
+      const perFilterMessage =
+        filter === "live"
+          ? "No live activity right now."
+          : filter === "community"
+            ? "No community signals in this window."
+            : "No signals match this filter.";
+      return (
+        <p className="text-center text-sm text-zinc-500 py-12">
+          {perFilterMessage}
+        </p>
+      );
+    }
+
+    return (
+      <div className="space-y-2">
+        <AnimatePresence mode="popLayout">
+          {filtered.map((event) => (
+            <motion.div
+              key={event.id}
+              layout
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+              className={`border-l-2 ${getBorderColor(event.type)} rounded-xl bg-zinc-800/30 px-5 py-4`}
+            >
+              <div className="flex items-start gap-3">
+                <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-zinc-800/50">
+                  {getEventIcon(event.type)}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm text-zinc-300">
+                    {getEventTitle(event)}
+                  </p>
+                  <p className="mt-1 text-xs text-zinc-500">
+                    {timeAgo(event.timestamp, tick)}
+                  </p>
+                  <ReactionBar eventId={event.id} />
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -208,41 +245,7 @@ export function SignalFeed() {
         ))}
       </div>
 
-      {/* Events */}
-      <div className="space-y-2">
-        <AnimatePresence mode="popLayout">
-          {filtered.map((event) => (
-            <motion.div
-              key={event.id}
-              layout
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
-              className={`border-l-2 ${getBorderColor(event.type)} rounded-xl bg-zinc-800/30 px-5 py-4`}
-            >
-              <div className="flex items-start gap-3">
-                <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-zinc-800/50">
-                  {getEventIcon(event.type)}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm text-zinc-300">{event.title}</p>
-                  <p className="mt-1 text-xs text-zinc-500">
-                    {timeAgo(event.timestamp)}
-                  </p>
-                  <ReactionBar eventId={event.id} />
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </div>
-
-      {filtered.length === 0 && (
-        <p className="text-center text-sm text-zinc-500 py-12">
-          No signals yet — the grid is quiet.
-        </p>
-      )}
+      {renderBody()}
     </div>
   );
 }
