@@ -4,8 +4,18 @@ import { recordLiveStatusSnapshot } from './signalEvents';
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 const CACHE_TTL_MS = 3 * 60 * 1000;
 
+// Check the most recent N uploads per channel. Catches the case where a
+// streamer uploaded a VOD after starting a live broadcast, which would push
+// the live item out of the #1 slot.
+const TOP_N_UPLOADS = 5;
+
+// After observing a channel live, keep reporting live for this long even if
+// a later poll returns false. Smooths over brief YouTube flag flips.
+const LIVE_GRACE_MS = 5 * 60 * 1000;
+
 let cachedResult: { data: Record<string, boolean>; timestamp: number } | null = null;
 const uploadsPlaylistCache: Map<string, string> = new Map();
+const lastSeenLiveAt: Map<string, number> = new Map();
 
 interface ChannelsListResponse {
   items?: Array<{
@@ -49,12 +59,17 @@ async function ensureUploadsPlaylists(channelIds: string[]): Promise<void> {
   }
 }
 
-async function fetchLatestVideoId(playlistId: string): Promise<string | null> {
+async function fetchLatestVideoIds(playlistId: string, count: number): Promise<string[]> {
   const url =
     `https://www.googleapis.com/youtube/v3/playlistItems` +
-    `?part=contentDetails&maxResults=1&playlistId=${playlistId}&key=${YOUTUBE_API_KEY}`;
+    `?part=contentDetails&maxResults=${count}&playlistId=${playlistId}&key=${YOUTUBE_API_KEY}`;
   const data = await ytFetch<PlaylistItemsResponse>(url);
-  return data.items?.[0]?.contentDetails?.videoId ?? null;
+  const ids: string[] = [];
+  for (const item of data.items ?? []) {
+    const videoId = item.contentDetails?.videoId;
+    if (videoId) ids.push(videoId);
+  }
+  return ids;
 }
 
 async function fetchVideoLiveStatus(videoIds: string[]): Promise<Map<string, boolean>> {
@@ -91,21 +106,38 @@ export async function getLiveStatus(): Promise<Record<string, boolean> | null> {
     const channelIds = streamers.map((s) => s.channelId);
     await ensureUploadsPlaylists(channelIds);
 
-    const latestVideoIdByChannel = new Map<string, string>();
+    // Fetch the top N most-recent video IDs per channel so an uploaded VOD
+    // mid-stream doesn't hide the live broadcast.
+    const videoIdsByChannel = new Map<string, string[]>();
     await Promise.allSettled(
       channelIds.map(async (channelId) => {
         const playlistId = uploadsPlaylistCache.get(channelId);
         if (!playlistId) return;
-        const videoId = await fetchLatestVideoId(playlistId);
-        if (videoId) latestVideoIdByChannel.set(channelId, videoId);
+        const ids = await fetchLatestVideoIds(playlistId, TOP_N_UPLOADS);
+        if (ids.length) videoIdsByChannel.set(channelId, ids);
       }),
     );
 
-    const videoIds = Array.from(latestVideoIdByChannel.values());
-    const liveByVideoId = await fetchVideoLiveStatus(videoIds);
+    const allVideoIds = Array.from(
+      new Set(Array.from(videoIdsByChannel.values()).flat()),
+    );
+    const liveByVideoId = await fetchVideoLiveStatus(allVideoIds);
 
-    for (const [channelId, videoId] of latestVideoIdByChannel) {
-      liveStatus[channelId] = liveByVideoId.get(videoId) ?? false;
+    const now = Date.now();
+    for (const channelId of channelIds) {
+      const ids = videoIdsByChannel.get(channelId) ?? [];
+      const anyLive = ids.some((id) => liveByVideoId.get(id) === true);
+
+      if (anyLive) {
+        lastSeenLiveAt.set(channelId, now);
+        liveStatus[channelId] = true;
+      } else {
+        const since = lastSeenLiveAt.get(channelId);
+        // Grace window: keep reporting live for LIVE_GRACE_MS after the last
+        // true reading to smooth over brief YouTube flag flips.
+        liveStatus[channelId] =
+          since !== undefined && now - since < LIVE_GRACE_MS;
+      }
     }
 
     cachedResult = { data: liveStatus, timestamp: Date.now() };
