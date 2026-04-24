@@ -14,14 +14,6 @@ export interface Streamer {
 
 export const streamers: Streamer[] = [
   {
-    name: "dyoburon",
-    channelUrl: "https://youtube.com/@dyoburon",
-    channelId: "UCYzpOLXEmgUiHZeho6u77Zg",
-    bio: "My background is software engineering (Ex-Microsoft, Salesforce, Expedia), and I recognized the power of LLMs to rapidly create products. I want to document my journey here with everyone, and hopefully create a community interested in building.",
-    avatarUrl: "https://yt3.ggpht.com/TeGGg2s1Y_ljM3kcNNcChz42YVuJc4PofSKGxOLTJD9wBlIVOq4RTzmsB0v24dMdSYERdmg30w=s800-c-k-c0x00ffffff-no-rj",
-    schedule: "Frequent streamer, varied times",
-  },
-  {
     name: "Quad H",
     channelUrl: "https://youtube.com/@HardHeadHackerHead",
     channelId: "UCvRibuOhtInWPz8Yaf3DjTw",
@@ -30,12 +22,28 @@ export const streamers: Streamer[] = [
     schedule: "Check channel for latest streams",
   },
   {
-    name: "Enterprise Vibe Code",
-    channelUrl: "https://youtube.com/@EnterpriseVibeCode",
-    channelId: "UCyxYcJWs5WstpM2h8KjabUw",
-    bio: "Senior DevOps Engineer live streaming how he's Vibe Coding Enterprise-Grade Open Source Applications.",
-    avatarUrl: "https://yt3.ggpht.com/soNqUlI1xJ6QaP_hlgY3-TZEcgsD06PARrEbyON99GiKgReOtglbO_4gAYp40VJebwPhSq7baQ=s800-c-k-c0x00ffffff-no-rj",
-    schedule: "Late night streams",
+    name: "BridgeMind",
+    channelUrl: "https://youtube.com/@bridgemindai",
+    channelId: "UCwaTGE53GLGC3fDClVl_7TA",
+    bio: "Matthew Miller is the Founder & CEO of BridgeMind — his third startup.",
+    avatarUrl: "https://yt3.ggpht.com/Nhub0TMCZUFjPrr7PZDvKuv6O2zICq7Yfi5Ah6P0OdTq_iaoZJ0zM8uMB4pKuEmc7XWpbrxa=s800-c-k-c0x00ffffff-no-rj",
+    schedule: "Afternoon/evening streams",
+  },
+  {
+    name: "Nico G",
+    channelUrl: "https://youtube.com/@NicoGrajales",
+    channelId: "UCfOgjnwXVU2mWVfRCBfEGdg",
+    bio: "Former Marine/Airman turned software dev, building in public. The mission: vibe code to $1,000,000. Stop typing. Start building.",
+    avatarUrl: "https://yt3.googleusercontent.com/FlhxsjvVI7Ca7wAf5IYBy8tl5s9evewgTIkpfFFiaMfl-xi4rwD6cwTkpSnKAKnV7B4137DM=s800-c-k-c0x00ffffff-no-rj",
+    schedule: "Check channel for latest streams",
+  },
+  {
+    name: "dyoburon",
+    channelUrl: "https://youtube.com/@dyoburon",
+    channelId: "UCYzpOLXEmgUiHZeho6u77Zg",
+    bio: "My background is software engineering (Ex-Microsoft, Salesforce, Expedia), and I recognized the power of LLMs to rapidly create products. I want to document my journey here with everyone, and hopefully create a community interested in building.",
+    avatarUrl: "https://yt3.ggpht.com/TeGGg2s1Y_ljM3kcNNcChz42YVuJc4PofSKGxOLTJD9wBlIVOq4RTzmsB0v24dMdSYERdmg30w=s800-c-k-c0x00ffffff-no-rj",
+    schedule: "Frequent streamer, varied times",
   },
   {
     name: "Jordan Lee",
@@ -46,12 +54,12 @@ export const streamers: Streamer[] = [
     schedule: "Frequent streamer, mornings ~9-10 AM ET",
   },
   {
-    name: "BridgeMind",
-    channelUrl: "https://youtube.com/@bridgemindai",
-    channelId: "UCwaTGE53GLGC3fDClVl_7TA",
-    bio: "Matthew Miller is the Founder & CEO of BridgeMind — his third startup.",
-    avatarUrl: "https://yt3.ggpht.com/Nhub0TMCZUFjPrr7PZDvKuv6O2zICq7Yfi5Ah6P0OdTq_iaoZJ0zM8uMB4pKuEmc7XWpbrxa=s800-c-k-c0x00ffffff-no-rj",
-    schedule: "Afternoon/evening streams",
+    name: "Enterprise Vibe Code",
+    channelUrl: "https://youtube.com/@EnterpriseVibeCode",
+    channelId: "UCyxYcJWs5WstpM2h8KjabUw",
+    bio: "Senior DevOps Engineer live streaming how he's Vibe Coding Enterprise-Grade Open Source Applications.",
+    avatarUrl: "https://yt3.ggpht.com/soNqUlI1xJ6QaP_hlgY3-TZEcgsD06PARrEbyON99GiKgReOtglbO_4gAYp40VJebwPhSq7baQ=s800-c-k-c0x00ffffff-no-rj",
+    schedule: "Late night streams",
   },
   {
     name: "Bilbro's Vibe Coding",
@@ -104,5 +112,13 @@ export const streamers: Streamer[] = [
       discord: "https://discord.gg/QhRnz9m5HE",
       github: "https://github.com/AndyMik90",
     },
+  },
+  {
+    name: "Unpuzzle",
+    channelUrl: "https://youtube.com/@unpuzzleco",
+    channelId: "UCX-jX5o5UxQ6nPTPSu0ZFPA",
+    bio: "Follow along as I vibe code my way to $1M in SaaS revenue, one day at a time. Solo founder building multiple products in public — raw, unfiltered, and real.",
+    avatarUrl: "https://yt3.googleusercontent.com/H-zangefn_edX0J4orDl1_L8P2ZStObf_47mm-viajjaSJjbO4LuiA6alHejk5aH7mP0Wi3qk70=s800-c-k-c0x00ffffff-no-rj",
+    schedule: "Check channel for latest streams",
   },
 ];
