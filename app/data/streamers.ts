@@ -121,4 +121,12 @@ export const streamers: Streamer[] = [
     avatarUrl: "https://yt3.googleusercontent.com/H-zangefn_edX0J4orDl1_L8P2ZStObf_47mm-viajjaSJjbO4LuiA6alHejk5aH7mP0Wi3qk70=s800-c-k-c0x00ffffff-no-rj",
     schedule: "Check channel for latest streams",
   },
+  {
+    name: "Tommy Yip",
+    channelUrl: "https://youtube.com/@TOMMYYIPXYZ",
+    channelId: "UCvNg5BdvvvU3-1RL5mRi6lQ",
+    bio: "Builds real client websites live using AI — Claude Code + Replit, selling on Fiverr. Scaling to $1,000,000. 447+ five-star reviews. Daily streams, real clients, real money.",
+    avatarUrl: "https://yt3.googleusercontent.com/ySL2FLwQaB2P3JUgrsOIjMFucmAU6P_PADRgKcMoj5WyVwpfvL8x0-jEDCeYc0ev2x6xGxuR=s800-c-k-c0x00ffffff-no-rj",
+    schedule: "Daily streams",
+  },
 ];
