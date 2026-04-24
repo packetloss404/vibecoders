@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { DiscordIcon } from "../ui/Icons";
+import { Logo } from "../ui/Logo";
 
 const navLinks = [
   { label: "Streamers", href: "#streamers" },
@@ -16,11 +17,11 @@ export function Navbar() {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 border-b border-zinc-800/50 bg-[#0f0f0f]/80 backdrop-blur-xl">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-3">
-        <Link
-          href="/"
-          className="text-lg font-extrabold tracking-tight bg-gradient-to-r from-teal-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent"
-        >
-          VIBE SOCIAL
+        <Link href="/" className="flex items-center gap-2">
+          <Logo className="h-7 w-7" />
+          <span className="text-lg font-extrabold tracking-tight bg-gradient-to-r from-teal-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
+            VIBE SOCIAL
+          </span>
         </Link>
 
         {/* Desktop nav */}

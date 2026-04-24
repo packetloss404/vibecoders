@@ -9,7 +9,7 @@ export default function BBSPage() {
     <div className="min-h-screen bg-[#0f0f0f] text-zinc-50">
       <Navbar />
 
-      <main className="mx-auto max-w-5xl px-6 pt-24 pb-16">
+      <main className="mx-auto max-w-7xl px-6 pt-24 pb-16">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -53,8 +53,7 @@ export default function BBSPage() {
             {/* BBS iframe */}
             <iframe
               src="https://bbs.packetloss404.com"
-              className="w-full border-0"
-              style={{ height: "600px" }}
+              className="w-full border-0 h-[calc(100vh-14rem)] min-h-[600px]"
               title="VibeBBS"
               allow="clipboard-write"
             />
@@ -84,7 +83,7 @@ export default function BBSPage() {
       </main>
 
       <footer className="border-t border-zinc-800/50 py-8">
-        <div className="mx-auto max-w-5xl px-6">
+        <div className="mx-auto max-w-7xl px-6">
           <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
             <span className="text-sm text-zinc-500">
               &copy; {new Date().getFullYear()} Vibe Social

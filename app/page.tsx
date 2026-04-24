@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { streamers } from "./data/streamers";
 import { Navbar } from "./components/landing/Navbar";
-import { Hero } from "./components/landing/Hero";
 import { StreamerSection } from "./components/landing/StreamerSection";
 import { SignalPreview } from "./components/landing/SignalPreview";
 import { BBSTeaser } from "./components/landing/BBSTeaser";
@@ -31,27 +30,18 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
-  const liveCount = Object.values(liveStatus).filter(Boolean).length;
-
   return (
     <div className="min-h-screen bg-[#0f0f0f] text-zinc-50">
       <Navbar />
 
       <main className="pt-14">
-        <Hero liveCount={liveCount} totalStreamers={streamers.length} />
-
-        {/* Divider */}
-        <div className="mx-auto max-w-5xl px-6">
-          <div className="h-px bg-gradient-to-r from-transparent via-zinc-800 to-transparent" />
-        </div>
-
         <StreamerSection streamers={streamers} liveStatus={liveStatus} />
 
         <div className="mx-auto max-w-5xl px-6">
           <div className="h-px bg-gradient-to-r from-transparent via-zinc-800 to-transparent" />
         </div>
 
-        <SignalPreview streamers={streamers} liveStatus={liveStatus} />
+        <SignalPreview />
 
         <div className="mx-auto max-w-5xl px-6">
           <div className="h-px bg-gradient-to-r from-transparent via-zinc-800 to-transparent" />
